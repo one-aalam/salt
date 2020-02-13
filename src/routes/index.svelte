@@ -39,4 +39,4 @@
 	<title>Sapper project template</title>
 </svelte:head>
 
-<Video src={"gone.mp4"}/>
+<Video src={"http://localhost:3001/video/dandja"}/>
