@@ -1,6 +1,8 @@
 <script>
 
     import VideoPlay from './VideoPlay.svelte';
+    import VideoPause from './VideoPause.svelte';
+
     export let src = "gone.mp4";
     export const title = '';
     let videoElm,
@@ -70,67 +72,84 @@
 
 
 <div class="video-player">
-    <video bind:this={videoElm} {src} id="video" class="screen" poster="img/poster.png" on:hover={showCtrl} on:timeupdate={onTimeUpdate}></video>
-    <!-- <div class="player-ctrl" on:click={toggleVideoStatus}>
-        <VideoPlay/>
-    </div> -->
-</div>
+    <video bind:this={videoElm} {src} id="video" class="screen" poster="img/poster.png" on:hover={showCtrl} on:timeupdate={onTimeUpdate}>
 
-<div class="controls">
-    {#if isPlaying}
-        <button class="btn" id="play" on:click={toggleVideoStatus}>
-            <i class="fa fa-pause fa-2x"></i>
+    </video>
+    <div class="player-ctrl">
+        <button class="big-ctrl" on:click={toggleVideoStatus}>
+            {#if isPlaying}
+                <VideoPause />
+            {:else}
+                <VideoPlay />
+            {/if}
         </button>
-    {:else}
-        <button class="btn" id="play" on:click={toggleVideoStatus}>
-            <i class="fa fa-play fa-2x"></i>
+    </div>
+    <div class="controls">
+        {#if isPlaying}
+            <button class="btn" id="play" on:click={toggleVideoStatus}>
+                <i class="fa fa-pause fa-2x"></i>
+            </button>
+        {:else}
+            <button class="btn" id="play" on:click={toggleVideoStatus}>
+                <i class="fa fa-play fa-2x"></i>
+            </button>
+        {/if}
+        <button class="btn" id="stop" on:click={stopVideo}>
+            <i class="fa fa-stop fa-2x"></i>
         </button>
-    {/if}
-    <button class="btn" id="stop" on:click={stopVideo}>
-        <i class="fa fa-stop fa-2x"></i>
-    </button>
-    <input
-    type="range"
-    bind:this={progressElm}
-    on:change={setVideoProgress}
-    class="progress"
-    min="0"
-    max="100"
-    step="0.1"
-    value="0"
-    />
-    <span class="timestamp" id="timestamp">{@html currTime }</span>
+        <input type="range" bind:this={progressElm} on:change={setVideoProgress} class="progress" min="0" max="100" step="0.1" value="0"/>
+        <span class="timestamp" id="timestamp">{@html currTime }</span>
+    </div>
 </div>
 
 <style>
-
+button {
+    background: none;
+    border: none;
+    transition: all .3s;
+    outline: 0;
+}
 .screen {
   cursor: pointer;
-  width: 60%;
+  width: 100%;
   background-color: #000 !important;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
 }
 
 .video-player {
     position: relative;
+    border-radius: 10px;
+    overflow: hidden;
 }
-/* .player-ctrl {
+.player-ctrl {
+    width: 100%;
+    height: 90%;
     position: absolute;
     top: 0;
-    left: 0;
-} */
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.player-ctrl button {
+    opacity: 0;
+}
+.player-ctrl:hover button {
+    opacity: 1;
+}
 
 .controls {
-  background: #333;
-  color: #fff;
-  width: 60%;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #333;
+    color: #fff;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
 .controls .btn {
